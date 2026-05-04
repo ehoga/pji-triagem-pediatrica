@@ -1,0 +1,216 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>PediTriagem — Triagem pediátrica</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
+<style>
+  html, body { margin: 0; padding: 0; background: #EAEEF3; font-family: 'Nunito', system-ui, sans-serif; }
+  * { box-sizing: border-box; }
+  ::-webkit-scrollbar { width: 0; height: 0; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+<script type="text/babel" src="ios-frame.jsx"></script>
+<script type="text/babel" src="design-canvas.jsx"></script>
+<script type="text/babel" src="tweaks-panel.jsx"></script>
+<script type="text/babel" src="peditriagem-tokens.jsx"></script>
+<script type="text/babel" src="peditriagem-screens-a.jsx"></script>
+<script type="text/babel" src="peditriagem-screens-b.jsx"></script>
+
+<script type="text/babel" data-presets="env,react">
+const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
+  "primary": "#2F80ED",
+  "navy": "#1E3A5F",
+  "view": "canvas"
+}/*EDITMODE-END*/;
+
+// ─────────────────────────────────────────────────────────────
+// App shell — routes & state
+// ─────────────────────────────────────────────────────────────
+function PediApp({ initialScreen = 'home', forceRisk = null, screenLabel }) {
+  const [screen, setScreen] = React.useState(initialScreen);
+  const [child, setChild] = React.useState(window.CHILDREN[0]);
+  const [symptom, setSymptom] = React.useState(window.SYMPTOMS[0]); // febre
+  const [result, setResult] = React.useState({
+    risk: forceRisk || 'low', score: 2, child: window.CHILDREN[0], symptom: window.SYMPTOMS[0],
+  });
+
+  const go = (s) => {
+    if (s === 'evaluate') s = 'symptoms';
+    setScreen(s);
+  };
+
+  const tabActive = ({
+    home: 'home', symptoms: 'evaluate', quiz: 'evaluate', result: 'evaluate',
+    orient: 'orient', history: 'history', profile: 'profile',
+    about: 'profile', 'child-add': 'profile',
+  })[screen] || 'home';
+
+  const showTabs = !['quiz', 'child-add'].includes(screen);
+
+  return (
+    <div data-screen-label={screenLabel} style={{
+      width: '100%', height: '100%', position: 'relative',
+      background: window.PT.bg, fontFamily: window.PT.font, color: window.PT.text,
+    }}>
+      <div style={{ position: 'absolute', inset: 0, paddingTop: 54, overflow: 'hidden' }}>
+        <div style={{ width: '100%', height: '100%', overflow: 'auto' }}>
+          {screen === 'home' && <window.HomeScreen go={go} child={child} setChild={setChild} />}
+          {screen === 'child-add' && <window.ChildScreen go={go} />}
+          {screen === 'symptoms' && <window.SymptomsScreen go={go} child={child}
+            pickSymptom={(s) => setSymptom(s)} />}
+          {screen === 'quiz' && <window.QuizScreen go={go} child={child} symptom={symptom}
+            setResult={setResult} forceRisk={forceRisk} />}
+          {screen === 'result' && <window.ResultScreen go={go} result={result} />}
+          {screen === 'orient' && <window.OrientScreen go={go} />}
+          {screen === 'history' && <window.HistoryScreen go={go} />}
+          {screen === 'profile' && <window.ProfileScreen go={go} />}
+          {screen === 'about' && <window.AboutScreen go={go} />}
+        </div>
+      </div>
+      {showTabs && <window.TabBar active={tabActive} onChange={go} />}
+    </div>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────
+// Phone frame — uses IOSDevice + status bar but no nav title
+// ─────────────────────────────────────────────────────────────
+function Phone({ children, label }) {
+  return (
+    <window.IOSDevice width={390} height={820}>
+      {children}
+    </window.IOSDevice>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────
+// Design canvas — many artboards
+// ─────────────────────────────────────────────────────────────
+const ARTBOARDS = [
+  { id: 'home', label: '01 Início' },
+  { id: 'child', label: '02 Cadastro da criança' },
+  { id: 'symptoms', label: '03 Selecionar sintoma' },
+  { id: 'quiz', label: '04 Questionário guiado' },
+  { id: 'result-low', label: '05a Resultado · Baixo risco', risk: 'low' },
+  { id: 'result-mod', label: '05b Resultado · Risco moderado', risk: 'mod' },
+  { id: 'result-high', label: '05c Resultado · Alto risco', risk: 'high' },
+  { id: 'orient', label: '06 Orientações' },
+  { id: 'history', label: '07 Histórico' },
+  { id: 'profile', label: '08 Perfil' },
+  { id: 'about', label: '09 Sobre o aplicativo' },
+];
+
+function getInitial(id, risk) {
+  if (id === 'home') return 'home';
+  if (id === 'child') return 'child-add';
+  if (id === 'symptoms') return 'symptoms';
+  if (id === 'quiz') return 'quiz';
+  if (id?.startsWith('result')) return 'result';
+  if (id === 'orient') return 'orient';
+  if (id === 'history') return 'history';
+  if (id === 'profile') return 'profile';
+  if (id === 'about') return 'about';
+  return 'home';
+}
+
+function CanvasView() {
+  return (
+    <window.DesignCanvas>
+      <window.DCSection id="flow" title="PediTriagem · fluxo completo">
+        {ARTBOARDS.map(a => (
+          <window.DCArtboard key={a.id} id={a.id} label={a.label} width={390} height={820}>
+            <Phone>
+              <PediApp
+                initialScreen={getInitial(a.id, a.risk)}
+                forceRisk={a.risk || null}
+                screenLabel={a.label}
+              />
+            </Phone>
+          </window.DCArtboard>
+        ))}
+      </window.DCSection>
+    </window.DesignCanvas>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────
+// Single-frame view — one phone centered
+// ─────────────────────────────────────────────────────────────
+function SingleView() {
+  return (
+    <div style={{
+      width: '100%', minHeight: '100vh', display: 'flex',
+      alignItems: 'center', justifyContent: 'center', padding: 40,
+      background: '#EAEEF3',
+    }}>
+      <Phone>
+        <PediApp initialScreen="home" screenLabel="Início" />
+      </Phone>
+    </div>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────
+// Root with Tweaks
+// ─────────────────────────────────────────────────────────────
+function Root() {
+  const [tweaks, setTweak] = window.useTweaks(TWEAK_DEFAULTS);
+
+  // Apply primary color override at runtime
+  React.useEffect(() => {
+    if (tweaks.primary && window.PT) {
+      window.PT.primary = tweaks.primary;
+    }
+    if (tweaks.navy && window.PT) {
+      window.PT.navy = tweaks.navy;
+    }
+  }, [tweaks.primary, tweaks.navy]);
+
+  const view = tweaks.view || 'canvas';
+
+  return (
+    <>
+      {view === 'canvas' ? <CanvasView /> : <SingleView />}
+      <window.TweaksPanel title="Tweaks">
+        <window.TweakSection label="Apresentação">
+          <window.TweakRadio label="Visualização"
+            value={view}
+            onChange={(v) => setTweak('view', v)}
+            options={[
+              { value: 'canvas', label: 'Canvas (todas)' },
+              { value: 'single', label: 'Tela única' },
+            ]} />
+        </window.TweakSection>
+        <window.TweakSection label="Cores">
+          <window.TweakColor label="Primária"
+            value={tweaks.primary} onChange={(v) => setTweak('primary', v)} />
+          <window.TweakColor label="Navy"
+            value={tweaks.navy} onChange={(v) => setTweak('navy', v)} />
+        </window.TweakSection>
+      </window.TweaksPanel>
+    </>
+  );
+}
+
+// Wait until all babel scripts have evaluated (their components attached to window)
+function mount() {
+  if (!window.HomeScreen || !window.IOSDevice || !window.DesignCanvas || !window.TweaksPanel) {
+    return setTimeout(mount, 50);
+  }
+  ReactDOM.createRoot(document.getElementById('root')).render(<Root />);
+}
+mount();
+</script>
+</body>
+</html>
