@@ -52,6 +52,18 @@ backend/HELP.md
 backend/*.jar
 backend/*.war
 
+# ============ Claude Code / IA ============
+.claude/
+.claude*
+CLAUDE.md
+claude.md
+.cursor/
+.cursorrules
+.aider*
+.continue/
+.codeium/
+.github/copilot-instructions.md
+
 # ============ Outros ============
 tmp/
 temp/
