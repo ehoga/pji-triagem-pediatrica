@@ -1,0 +1,58 @@
+# ============ macOS ============
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# ============ IDEs ============
+.idea/
+*.iml
+*.iws
+*.ipr
+.vscode/
+*.swp
+*.swo
+.project
+.classpath
+.settings/
+.factorypath
+.metadata
+.recommenders
+
+# ============ Logs ============
+*.log
+logs/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# ============ Env / Secrets ============
+.env
+.env.local
+.env.*.local
+*.pem
+*.key
+secrets/
+
+# ============ Node / React Native (frontend) ============
+frontend/node_modules/
+frontend/.expo/
+frontend/.expo-shared/
+frontend/dist/
+frontend/web-build/
+frontend/.cache/
+frontend/coverage/
+
+# ============ Java / Spring (backend) ============
+backend/target/
+backend/build/
+backend/!**/src/main/**/target/
+backend/!**/src/test/**/target/
+backend/.mvn/wrapper/maven-wrapper.jar
+backend/HELP.md
+backend/*.jar
+backend/*.war
+
+# ============ Outros ============
+tmp/
+temp/
+*.bak
