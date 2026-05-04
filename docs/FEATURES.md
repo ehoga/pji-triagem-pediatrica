@@ -1356,7 +1356,7 @@ README final com pré-requisitos, comandos passo a passo, troubleshooting comum.
 
 ---
 
-#### F07-T05 — Gerar APK Android
+#### F07-T05 — Build iOS via EAS + publicar no TestFlight
 - **Tipo:** frontend
 - **Estimativa:** M
 - **Sugestão de assignee:** Matheus (`jomatheusdev`)
@@ -1364,17 +1364,31 @@ README final com pré-requisitos, comandos passo a passo, troubleshooting comum.
 - **Labels:** `frontend`, `infra`
 
 **Descrição**
-Build de APK distribuível com EAS Build (free tier).
+Build iOS distribuível via EAS Build (Expo) e publicação no **TestFlight** para que time e banca testem em iPhones reais. EAS faz o build na cloud da Expo (free tier) — não precisa de Mac/Xcode local.
+
+**Pré-requisitos externos:** conta Apple Developer ativa ($99/ano — alguém do time já possui). App Manager: Matheus (`jomatheusdev`).
 
 **Tarefas**
-- [ ] Criar conta Expo (gratuita) se necessário
-- [ ] Configurar `eas.json` com profile `preview`
-- [ ] `eas build --platform android --profile preview`
-- [ ] Subir APK como artefato no GitHub Releases (rascunho)
+- [ ] Confirmar bundle ID (sugestão: `com.peditriagem.app`) e nome do app no App Store Connect
+- [ ] Criar conta gratuita na Expo (https://expo.dev) e rodar `eas login` + `eas init`
+- [ ] Configurar `eas.json` com profile `preview` (perfeito para TestFlight)
+- [ ] Configurar `app.json` com `ios.bundleIdentifier`, `ios.buildNumber`, ícones iOS específicos
+- [ ] `eas credentials` para EAS gerenciar certificados e provisioning profiles automaticamente
+- [ ] `eas build --platform ios --profile preview`
+- [ ] `eas submit --platform ios --latest` (sobe para App Store Connect)
+- [ ] No App Store Connect, configurar TestFlight:
+  - [ ] Adicionar 8 devs do time como Internal Testers
+  - [ ] Convidar emails da banca/professor antes da apresentação
+- [ ] Documentar no README como instalar via TestFlight
 
 **Critérios de aceitação**
-- APK instala e abre em pelo menos 1 celular Android real
-- App consegue se comunicar com backend local (instruir IP local na rede)
+- App instala via TestFlight em pelo menos 1 iPhone real do time
+- App consegue se comunicar com backend local (instruir IP local na rede WiFi durante apresentação)
+- Build aparece em App Store Connect e Internal Testing está habilitado
+
+**Notas**
+- TestFlight Internal Testing fica disponível em ~10 min após o build subir (sem review da Apple)
+- Builds expiram em 90 dias — fazer novo build perto da apresentação
 
 ---
 
