@@ -159,7 +159,7 @@ F00 (Setup + Design) ───────────────────�
 |---|---|
 | **Matheus (`jomatheusdev`)** — tech lead front | F00 (port tokens/componentes, axios, storage, CI front), F01-T09/T10 (AuthContext + guard), F07 build |
 | **Caio (`caiomps`)** | F00-T06 (navegação tab bar), F01 (telas Login/Cadastro), F02 (telas de criança), F10 (Perfil) |
-| **Jefferson (`JeffinhoPB`)** | F02-T03 (helper idade), F04-T15/T16 (tela de questionário com mascote/bubble), F06 (About) |
+| **Jefferson (`jeffersonEzequiel`)** | F02-T03 (helper idade), F04-T15/T16 (tela de questionário com mascote/bubble), F06 (About) |
 | **Pedro (`PedroLucasSCPB`)** | F00-T09 (ícones SVG), F03 (seleção sintoma), F05 (tela de resultado), F08 testes front, F09-T04 (tela Histórico) |
 | **Andre (`Andrelbf41`)** | F00-T10 (Mascote), F06 (Orientações 4 categorias), F09-T05 (recentes na home) |
 
