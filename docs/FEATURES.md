@@ -692,7 +692,7 @@ Implementar `POST /api/criancas`, `GET /api/criancas`, `GET /api/criancas/{id}`,
 #### F02-T03 — Helper de cálculo de idade no frontend
 - **Tipo:** frontend
 - **Estimativa:** P
-- **Sugestão de assignee:** Jefferson (`JeffinhoPB`)
+- **Sugestão de assignee:** Jefferson (`jeffersonEzequiel`)
 - **Dependências:** F00-T11
 - **Labels:** `frontend`, `feature`
 
@@ -1033,7 +1033,7 @@ Recebe `{criancaId, sintomaId, respostas: [{perguntaCodigo, valor}]}`, processa,
 #### F04-T15 — Tela de Questionário (renderização dinâmica)
 - **Tipo:** frontend
 - **Estimativa:** GG
-- **Sugestão de assignee:** Jefferson (`JeffinhoPB`)
+- **Sugestão de assignee:** Jefferson (`jeffersonEzequiel`)
 - **Dependências:** F03-T03, F04-T04, F00-T10 (Mascote)
 - **Labels:** `frontend`, `feature`, `priority: high`
 
@@ -1064,7 +1064,7 @@ Tela do quiz com pergunta atual em **bubble com mascote**, conforme design (linh
 #### F04-T16 — Loading e tratamento de erro do questionário
 - **Tipo:** frontend
 - **Estimativa:** P
-- **Sugestão de assignee:** Jefferson (`JeffinhoPB`)
+- **Sugestão de assignee:** Jefferson (`jeffersonEzequiel`)
 - **Dependências:** F04-T15
 - **Labels:** `frontend`, `feature`
 
@@ -1224,7 +1224,7 @@ Tela mostrada ao tocar em uma categoria ou sintoma. Conteúdo educativo de leitu
 #### F06-T03 — Tela "Sobre o aplicativo"
 - **Tipo:** frontend
 - **Estimativa:** M
-- **Sugestão de assignee:** Jefferson (`JeffinhoPB`)
+- **Sugestão de assignee:** Jefferson (`jeffersonEzequiel`)
 - **Dependências:** F00-T08
 - **Labels:** `frontend`, `feature`, `documentation`
 
@@ -1248,7 +1248,7 @@ Tela acessível via aba Perfil → "Sobre o aplicativo". Layout fiel a `design/p
 #### F06-T04 — Disclaimer in-place na home e no resultado
 - **Tipo:** frontend
 - **Estimativa:** P
-- **Sugestão de assignee:** Jefferson (`JeffinhoPB`)
+- **Sugestão de assignee:** Jefferson (`jeffersonEzequiel`)
 - **Dependências:** F00-T08
 - **Labels:** `frontend`, `feature`
 
@@ -1763,7 +1763,7 @@ F00-T07, F00-T08, F00-T11, F00-T12, F00-T13, F00-T14, F01-T09, F01-T10, F07-T01,
 **Caio (`caiomps`)** — 8 tasks
 F00-T06, F01-T07, F01-T08, F02-T04, F02-T05, F07-T03, F10-T01, F10-T02
 
-**Jefferson (`JeffinhoPB`)** — 5 tasks
+**Jefferson (`jeffersonEzequiel`)** — 5 tasks
 F02-T03, F04-T15, F04-T16, F06-T03, F06-T04
 
 **Pedro (`PedroLucasSCPB`)** — 8 tasks
