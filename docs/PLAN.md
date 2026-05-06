@@ -35,7 +35,8 @@ Login → Home → Selecionar/cadastrar criança → Selecionar sintoma → Resp
 | **Engine de triagem** | **Híbrido**: scoring (pesos por resposta) + red flags clínicos (override para alto risco) |
 | **Idade da criança** | Persistida como `dataNascimento` (LocalDate) — front calcula em meses ou anos |
 | **Notificações** | Apenas ícone visual (sem push) — abre tela "Em breve" |
-| **Hospedagem** | Backend local na máquina do dev no momento da apresentação |
+| **Hospedagem do backend** | Local na máquina do dev no momento da apresentação |
+| **Distribuição do app** | **iOS via TestFlight** (build na cloud da Expo via EAS, conta Apple Developer existente do time). Sem versão Android no MVP. |
 | **Banco de dados** | **PostgreSQL 16** em dev (via docker-compose) e em prod |
 | **Testes do backend** | **Testcontainers** (sobe Postgres dockerizado por test run) |
 | **Documentação de API** | **Swagger UI via Springdoc** (decisão registrada na §13) |
@@ -47,6 +48,7 @@ Login → Home → Selecionar/cadastrar criança → Selecionar sintoma → Resp
 ## 3. Stack técnica (resumo)
 
 - **Frontend:** React Native + Expo (JS), `react-native-svg`, `@react-navigation/native` (bottom tabs + native stack)
+- **Distribuição iOS:** EAS Build + TestFlight (App Store Connect)
 - **Backend:** Java 21 + Spring Boot 3 + Maven, Spring Security, JJWT, JPA
 - **DB:** PostgreSQL 16 (dev via docker-compose, prod local na apresentação)
 - **Testes:** JUnit 5 + Testcontainers (Postgres em container por test run)
@@ -135,7 +137,7 @@ F00 (Setup + Design) ───────────────────�
 | **S3 — Coração da app** | F04 (scoring engine + 4 fluxogramas: febre, tosse, vômitos, dor abdominal) + F03 final | Triagem ponta-a-ponta funciona para 4 sintomas |
 | **S4 — Cobertura completa** | F04 (5 fluxogramas restantes + red flags) + F05 + início F09 | Todos os 9 sintomas funcionam, tela de resultado polida, histórico iniciado |
 | **S5 — Refinamento** | F09 (histórico final) + F10 (perfil) + F06 (orientações + about) + F08 (testes) | Histórico, Perfil, Orientações funcionais, testes do engine |
-| **S6 — Reta final** | F07 (polimento + build + ensaio) + buffer | APK gerado, demo ensaiada, bugs críticos resolvidos |
+| **S6 — Reta final** | F07 (polimento + build + ensaio) + buffer | App publicado no TestFlight, demo ensaiada, bugs críticos resolvidos |
 
 **Buffer:** S6 é parcialmente buffer. Se algum sprint atrasar, este absorve.
 
@@ -180,11 +182,11 @@ O MVP está pronto para apresentação quando:
 - [ ] Histórico mostra avaliações anteriores com filtro por criança e stats básicas
 - [ ] Tela Perfil mostra dados do usuário e lista de crianças
 - [ ] Disclaimer médico está em local visível (cards na home, em about, no resultado)
-- [ ] App roda em emulador e em pelo menos 1 celular físico (Android)
-- [ ] Backend roda local sem erro
+- [ ] App instalado via **TestFlight** em pelo menos 1 iPhone real do time
+- [ ] Backend roda local sem erro (na máquina da apresentação)
 - [ ] Swagger UI lista todos os endpoints com `tryItOut` funcionando
-- [ ] README atualizado com instruções para clonar e rodar
-- [ ] Build de APK gerada com sucesso
+- [ ] README atualizado com instruções para clonar, rodar e instalar via TestFlight
+- [ ] Build iOS publicado no TestFlight com Internal Testing ativo
 - [ ] Testes do engine de scoring + red flags passam (mínimo 1 caso por nível por sintoma)
 
 ---
