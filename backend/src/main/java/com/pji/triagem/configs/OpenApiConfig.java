@@ -12,8 +12,7 @@ import org.springframework.context.annotation.Configuration;
         info = @Info(
                 title = "PediTriagem API",
                 version = "0.1.0",
-                description = "API de triagem pediátrica — backend Spring Boot do PediTriagem.",
-                license = @License(name = "Uso acadêmico — PJI UFG")
+                description = "API de triagem pediátrica — backend Spring Boot do PediTriagem."
         )
 )
 @SecurityScheme(
