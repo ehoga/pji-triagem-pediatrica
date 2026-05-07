@@ -68,3 +68,10 @@ claude.md
 tmp/
 temp/
 *.bak
+
+# ============ Docker overrides locais ============
+docker-compose.override.yml
+
+# ============ Logs e dados de volume locais ============
+postgres_data/
+*.log
