@@ -18,7 +18,7 @@ import java.util.function.Function;
 @Component
 public class JwtTokenProvider {
 
-    public static final String SECRET_KEY = "sua-chave-deve-ter-no-minimo-32-caracteres-whjkb3e1231481y34423wdas45dgsvfsd32341";
+    public static final String SECRET_KEY = "triagem-8Fv$29Kx!LmQ7pZ#4RtYw@2NcHjA6sUd";
 
     @SuppressWarnings("all")
     private final Key signingKey = new SecretKeySpec(SECRET_KEY.getBytes(StandardCharsets.UTF_8), SignatureAlgorithm.HS256.getJcaName());
