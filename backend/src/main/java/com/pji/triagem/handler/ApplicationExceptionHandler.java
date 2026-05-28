@@ -55,4 +55,5 @@ public class ApplicationExceptionHandler extends ResponseEntityExceptionHandler 
         response.setErrors(Collections.singletonList((message)));
         return handleExceptionInternal(ex, response, new HttpHeaders(), status, req);
     }
+
 }
