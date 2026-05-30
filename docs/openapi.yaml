@@ -1,0 +1,547 @@
+openapi: 3.0.3
+info:
+  title: PediTriagem API
+  version: 1.0.0
+  description: Contrato inicial do MVP para integração entre frontend Expo e backend Spring Boot.
+servers:
+  - url: http://localhost:8080
+    description: Desenvolvimento local
+security:
+  - bearerAuth: []
+tags:
+  - name: Health
+  - name: Auth
+  - name: Crianças
+  - name: Sintomas
+  - name: Avaliações
+paths:
+  /health:
+    get:
+      tags: [Health]
+      summary: Verifica disponibilidade da API
+      security: []
+      responses:
+        '200':
+          description: API operacional
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthResponse'
+  /auth/register:
+    post:
+      tags: [Auth]
+      summary: Cria uma conta de cuidador
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterRequest'
+      responses:
+        '201':
+          description: Conta criada e sessão iniciada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '409':
+          $ref: '#/components/responses/Conflict'
+  /auth/login:
+    post:
+      tags: [Auth]
+      summary: Autentica cuidador com email e senha
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        '200':
+          description: Sessão autenticada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /auth/me:
+    get:
+      tags: [Auth]
+      summary: Retorna o usuário autenticado
+      responses:
+        '200':
+          description: Usuário autenticado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Usuario'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /api/criancas:
+    get:
+      tags: [Crianças]
+      summary: Lista crianças cadastradas do cuidador
+      responses:
+        '200':
+          description: Crianças cadastradas
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CriancaResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+    post:
+      tags: [Crianças]
+      summary: Cadastra uma criança
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CriancaRequest'
+      responses:
+        '201':
+          description: Criança cadastrada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CriancaResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /api/criancas/{id}:
+    parameters:
+      - $ref: '#/components/parameters/Id'
+    get:
+      tags: [Crianças]
+      summary: Busca criança por ID
+      responses:
+        '200':
+          description: Criança encontrada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CriancaResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    put:
+      tags: [Crianças]
+      summary: Atualiza dados de uma criança
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CriancaRequest'
+      responses:
+        '200':
+          description: Criança atualizada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CriancaResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    delete:
+      tags: [Crianças]
+      summary: Remove uma criança
+      responses:
+        '204':
+          description: Criança removida
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /api/sintomas:
+    get:
+      tags: [Sintomas]
+      summary: Lista sintomas disponíveis para triagem
+      responses:
+        '200':
+          description: Catálogo de sintomas
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SintomaResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /api/sintomas/{id}/perguntas:
+    get:
+      tags: [Sintomas]
+      summary: Lista perguntas de triagem para um sintoma
+      parameters:
+        - $ref: '#/components/parameters/Id'
+      responses:
+        '200':
+          description: Perguntas do sintoma
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PerguntaResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /api/avaliacoes:
+    get:
+      tags: [Avaliações]
+      summary: Lista avaliações do cuidador autenticado
+      parameters:
+        - name: criancaId
+          in: query
+          schema:
+            type: string
+            format: uuid
+        - name: risco
+          in: query
+          schema:
+            $ref: '#/components/schemas/Risco'
+      responses:
+        '200':
+          description: Avaliações encontradas
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AvaliacaoResumo'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+    post:
+      tags: [Avaliações]
+      summary: Registra uma avaliação de triagem
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AvaliacaoRequest'
+      responses:
+        '201':
+          description: Avaliação registrada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AvaliacaoResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /api/avaliacoes/stats:
+    get:
+      tags: [Avaliações]
+      summary: Retorna estatísticas resumidas do histórico
+      responses:
+        '200':
+          description: Estatísticas do cuidador
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AvaliacaoStats'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /api/avaliacoes/{id}:
+    get:
+      tags: [Avaliações]
+      summary: Busca detalhes de uma avaliação
+      parameters:
+        - $ref: '#/components/parameters/Id'
+      responses:
+        '200':
+          description: Avaliação encontrada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AvaliacaoResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  parameters:
+    Id:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+  responses:
+    BadRequest:
+      description: Requisição inválida
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ApiError'
+    Unauthorized:
+      description: Token ausente, inválido ou expirado
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ApiError'
+    NotFound:
+      description: Recurso não encontrado
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ApiError'
+    Conflict:
+      description: Conflito de negócio
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ApiError'
+  schemas:
+    ApiError:
+      type: object
+      required: [status, message, timestamp]
+      properties:
+        status:
+          type: integer
+          example: 400
+        message:
+          type: string
+          example: Campo obrigatório não informado
+        path:
+          type: string
+          example: /api/criancas
+        timestamp:
+          type: string
+          format: date-time
+    HealthResponse:
+      type: object
+      required: [status, timestamp]
+      properties:
+        status:
+          type: string
+          example: ok
+        timestamp:
+          type: string
+          format: date-time
+    RegisterRequest:
+      type: object
+      required: [name, email, password]
+      properties:
+        name:
+          type: string
+          example: Camila Ribeiro
+        email:
+          type: string
+          format: email
+          example: camila.demo@peditriagem.app
+        password:
+          type: string
+          minLength: 6
+          example: peditriagem123
+    LoginRequest:
+      type: object
+      required: [email, password]
+      properties:
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+          minLength: 6
+    AuthResponse:
+      type: object
+      required: [token, user]
+      properties:
+        token:
+          type: string
+          description: JWT de acesso
+        user:
+          $ref: '#/components/schemas/Usuario'
+    Usuario:
+      type: object
+      required: [id, name, email]
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        email:
+          type: string
+          format: email
+    CriancaRequest:
+      type: object
+      required: [nome, dataNascimento]
+      properties:
+        nome:
+          type: string
+          example: Maria
+        dataNascimento:
+          type: string
+          format: date
+          example: 2022-05-04
+        pesoKg:
+          type: number
+          format: double
+          example: 17.0
+    CriancaResponse:
+      allOf:
+        - $ref: '#/components/schemas/CriancaRequest'
+        - type: object
+          required: [id, createdAt]
+          properties:
+            id:
+              type: string
+              format: uuid
+            idadeDescricao:
+              type: string
+              example: 4 anos
+            createdAt:
+              type: string
+              format: date-time
+    SintomaResponse:
+      type: object
+      required: [id, nome, descricao, ativo]
+      properties:
+        id:
+          type: string
+          example: fever
+        nome:
+          type: string
+          example: Febre
+        descricao:
+          type: string
+          example: Temperatura acima de 37,8°C
+        icone:
+          type: string
+          example: thermo
+        ativo:
+          type: boolean
+    PerguntaResponse:
+      type: object
+      required: [id, texto, tipo, ordem]
+      properties:
+        id:
+          type: string
+          example: fever-temperature
+        texto:
+          type: string
+          example: Qual a temperatura medida agora?
+        ajuda:
+          type: string
+          example: Termômetro axilar é o mais comum.
+        tipo:
+          type: string
+          enum: [OPTIONS, YES_NO]
+        ordem:
+          type: integer
+        opcoes:
+          type: array
+          items:
+            $ref: '#/components/schemas/PerguntaOpcao'
+    PerguntaOpcao:
+      type: object
+      required: [id, label]
+      properties:
+        id:
+          type: string
+        label:
+          type: string
+    AvaliacaoRequest:
+      type: object
+      required: [criancaId, sintomaId, respostas]
+      properties:
+        criancaId:
+          type: string
+          format: uuid
+        sintomaId:
+          type: string
+          example: fever
+        respostas:
+          type: array
+          items:
+            $ref: '#/components/schemas/RespostaTriagem'
+    RespostaTriagem:
+      type: object
+      required: [perguntaId, resposta]
+      properties:
+        perguntaId:
+          type: string
+        resposta:
+          type: string
+    AvaliacaoResponse:
+      type: object
+      required: [id, crianca, sintoma, risco, score, redFlag, orientacoes, createdAt]
+      properties:
+        id:
+          type: string
+          format: uuid
+        crianca:
+          $ref: '#/components/schemas/CriancaResponse'
+        sintoma:
+          $ref: '#/components/schemas/SintomaResponse'
+        risco:
+          $ref: '#/components/schemas/Risco'
+        score:
+          type: integer
+          example: 6
+        redFlag:
+          type: boolean
+        orientacoes:
+          type: array
+          items:
+            type: string
+        createdAt:
+          type: string
+          format: date-time
+    AvaliacaoResumo:
+      type: object
+      required: [id, criancaNome, sintomaNome, risco, createdAt]
+      properties:
+        id:
+          type: string
+          format: uuid
+        criancaNome:
+          type: string
+        sintomaNome:
+          type: string
+        risco:
+          $ref: '#/components/schemas/Risco'
+        createdAt:
+          type: string
+          format: date-time
+    AvaliacaoStats:
+      type: object
+      required: [total, baixoRisco, riscoModerado, altoRisco]
+      properties:
+        total:
+          type: integer
+        baixoRisco:
+          type: integer
+        riscoModerado:
+          type: integer
+        altoRisco:
+          type: integer
+    Risco:
+      type: string
+      enum: [LOW, MOD, HIGH]
