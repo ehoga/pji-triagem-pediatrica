@@ -23,7 +23,7 @@ pji-triagem-pediatrica/
 
 | Ferramenta | Versão | Uso |
 |---|---|---|
-| Node.js | 18+ | Frontend |
+| Node.js | 20+ | Frontend e CI |
 | npm ou yarn | — | Frontend |
 | Java JDK | 21 | Backend |
 | Expo Go (app) | — | Testar no celular sem build nativa |
@@ -44,6 +44,54 @@ npm install     # apenas na primeira vez
 npm start
 ```
 Após iniciar, escaneie o QR code com o app **Expo Go** ou pressione `w` para abrir no navegador.
+
+Variáveis úteis:
+
+```bash
+EXPO_PUBLIC_API_URL=http://<IP-DA-SUA-MAQUINA>:8080
+EXPO_PUBLIC_USE_MOCK_AUTH=true
+```
+
+Use o IP local da máquina quando o app estiver em um celular físico na mesma rede Wi-Fi.
+
+## Qualidade do frontend
+
+```bash
+cd frontend
+npm run doctor
+```
+
+O workflow `.github/workflows/frontend.yml` executa `npm ci` e `npm run doctor` em PRs que alteram o frontend.
+
+## Contrato da API
+
+O contrato inicial do MVP está em [`docs/openapi.yaml`](./docs/openapi.yaml). O frontend deve consumir endpoints refletidos nesse arquivo; quando a API real ainda não existir, use mocks atrás de uma camada de service.
+
+## Build iOS e TestFlight
+
+O projeto já contém `frontend/eas.json` com profile `preview` para build iOS distribuível via TestFlight.
+
+Pré-requisitos externos:
+
+- Conta Expo autenticada com `npx eas-cli login`.
+- Projeto vinculado com `npx eas-cli init`.
+- Apple Developer Program ativo.
+- Bundle ID acordado: `com.peditriagem.app`.
+- App criado no App Store Connect.
+
+Comandos:
+
+```bash
+cd frontend
+EXPO_PUBLIC_API_URL=http://<IP-DA-SUA-MAQUINA>:8080 npm run build:ios:preview
+npm run submit:ios:latest
+```
+
+Após o envio, configure os Internal Testers no App Store Connect e compartilhe o convite do TestFlight com o time e a banca. O backend continua rodando localmente na máquina da apresentação.
+
+## Demonstração
+
+O roteiro de apresentação está em [`docs/DEMO.md`](./docs/DEMO.md), com cenários de baixo risco, risco moderado e alto risco com red flag.
 
 ## Fluxo de trabalho (importante)
 
