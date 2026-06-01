@@ -4,10 +4,12 @@ import com.pji.triagem.model.Sintoma;
 import com.pji.triagem.repository.SintomaRepository;
 import java.util.List;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 @Component
+@Order(1)
 public class SintomaCatalogSeeder implements CommandLineRunner {
 
     private final SintomaRepository sintomaRepository;
