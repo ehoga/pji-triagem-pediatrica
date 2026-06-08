@@ -44,6 +44,7 @@ export function HomeScreen({ childrenList, historyItems = [], onGo, onSelectChil
         <Pressable
           accessibilityRole="button"
           accessibilityLabel="Notificações"
+          onPress={() => onGo('notifications')}
           style={[
             {
               alignItems: 'center',

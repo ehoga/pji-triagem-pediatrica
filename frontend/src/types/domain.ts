@@ -47,6 +47,8 @@ export type AppScreen =
   | 'profile'
   | 'about'
   | 'child-add'
+  | 'notifications'
+  | 'privacy'
   | 'dev';
 
 export interface ChildProfile {

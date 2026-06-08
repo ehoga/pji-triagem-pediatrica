@@ -5,7 +5,9 @@ import { ChildFormScreen } from '../screens/ChildFormScreen';
 import { DevScreen } from '../screens/DevScreen';
 import { HistoryScreen } from '../screens/HistoryScreen';
 import { HomeScreen } from '../screens/HomeScreen';
+import { NotificationsScreen } from '../screens/NotificationsScreen';
 import { OrientationsScreen } from '../screens/OrientationsScreen';
+import { PrivacyScreen } from '../screens/PrivacyScreen';
 import { ProfileScreen } from '../screens/ProfileScreen';
 import { QuizScreen } from '../screens/QuizScreen';
 import { ResultScreen } from '../screens/ResultScreen';
@@ -28,7 +30,7 @@ function tabForScreen(screen: AppScreen): AppTab {
   if (['symptoms', 'quiz', 'result'].includes(screen)) return 'evaluate';
   if (screen === 'orientations') return 'orientations';
   if (screen === 'history') return 'history';
-  if (['profile', 'about', 'child-add', 'dev'].includes(screen)) return 'profile';
+  if (['profile', 'about', 'child-add', 'notifications', 'privacy', 'dev'].includes(screen)) return 'profile';
   return 'home';
 }
 
@@ -43,7 +45,7 @@ export function MainTabs() {
   const [returnScreen, setReturnScreen] = useState<AppScreen>('home');
 
   const activeTab = useMemo(() => tabForScreen(screen), [screen]);
-  const showTabs = !['child-add', 'quiz', 'result', 'about', 'dev'].includes(screen);
+  const showTabs = !['child-add', 'quiz', 'result', 'about', 'notifications', 'privacy', 'dev'].includes(screen);
 
   useEffect(() => {
     if (data.children.length) {
@@ -142,6 +144,14 @@ export function MainTabs() {
 
     if (screen === 'about') {
       return <AboutScreen onBack={() => setScreen('profile')} />;
+    }
+
+    if (screen === 'notifications') {
+      return <NotificationsScreen onBack={() => setScreen('profile')} />;
+    }
+
+    if (screen === 'privacy') {
+      return <PrivacyScreen onBack={() => setScreen('profile')} />;
     }
 
     if (screen === 'dev') {

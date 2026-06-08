@@ -17,8 +17,8 @@ function tintFor(child: ChildProfile) {
 }
 
 const preferences: PreferenceItem[] = [
-  { icon: 'bell', label: 'Notificações' },
-  { icon: 'shield', label: 'Privacidade e dados' },
+  { icon: 'bell', label: 'Notificações', go: 'notifications' },
+  { icon: 'shield', label: 'Privacidade e dados', go: 'privacy' },
   { icon: 'info', label: 'Sobre o aplicativo', go: 'about' },
   { icon: 'settings', label: 'Storybook visual', go: 'dev' },
 ];

@@ -1,5 +1,6 @@
 export { Card } from './Card';
 export { AppTabBar } from './AppTabBar';
+export { EmptyStateScreen } from './EmptyStateScreen';
 export { GhostButton } from './GhostButton';
 export { HistoryRow } from './HistoryRow';
 export { Icon } from './Icon';
