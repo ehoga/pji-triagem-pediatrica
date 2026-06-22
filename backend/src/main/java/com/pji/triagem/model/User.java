@@ -55,13 +55,13 @@ public class User implements Serializable {
     @Column(nullable = false, name = "tentativas")
     private Integer attemptsCount = 0;  // Número de tentativas de login falhas
 
-    public User(String cpf, String encode, TypeUser typeUser) {
+    public User(String cpf, String encode, TypeUser typeUser, String email, String name) {
         this.cpf = cpf;
         this.password = encode;
         this.type = typeUser;
         this.createdAt = LocalDateTime.now();
-        this.name = "";
-        this.email = "";
+        this.name = name;
+        this.email = email;
     }
 
     public User(String login, String encode, TypeUser type, TypeUser typeUser) {

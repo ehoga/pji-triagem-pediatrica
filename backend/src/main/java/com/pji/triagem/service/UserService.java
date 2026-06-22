@@ -15,5 +15,5 @@ public interface UserService extends BaseService<User> {
 
     UserAuth loadUserById(Long userId);
 
-    User registerClientUser(String login, String password, TypeUser typeUser);
+    User registerClientUser(String login, String password, TypeUser typeUser, String email, String name);
 }

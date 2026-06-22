@@ -17,7 +17,6 @@ import com.pji.triagem.service.UserService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.aop.framework.AopContext;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -26,8 +25,6 @@ import org.springframework.stereotype.Service;
 public class UserServiceImpl extends BaseServiceImpl<User> implements UserService {
 
     private final UserRepository userRepository;
-
-    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Override
     protected BaseRepository<User, Long> getRepository() {
@@ -69,15 +66,6 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
         getSelf().save(user);
     }
 
-
-    public User registerUser(String login, String password, TypeUser type) {
-        login = ReplaceUtils.refactoryString(login);
-        password = ReplaceUtils.removeSpacesEmpty(password);
-        validateRegisterUser(login, type);
-        return getSelf().save(UserFactory.createUserTypeClient(login, password));
-
-    }
-
     public void validateRegisterUser(String login, TypeUser type) {
         DocumentValidator validator = DocumentValidatorFactory.getValidator(login);
         if(!validator.isValid(login)){
@@ -104,7 +92,7 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
     }
 
     @Override
-    public User registerClientUser(String login, String password, TypeUser typeUser) {
+    public User registerClientUser(String login, String password, TypeUser typeUser, String email, String name) {
         login = ReplaceUtils.refactoryString(login);
         password = ReplaceUtils.removeSpacesEmpty(password);
 
@@ -113,7 +101,7 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
             throw new ValidationException("Não foi possivel criar o usuário , pois o CPF/CNPJ não é válido");
         }
 
-        User newUser = UserFactory.createUserTypeClient(login, password);
+        User newUser = UserFactory.createUserTypeClient(login, password, email, name);
         return userRepository.findByLoginAndType(login, typeUser)
                 .orElseGet(() -> getSelf().save(newUser));
     }

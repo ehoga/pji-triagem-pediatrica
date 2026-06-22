@@ -33,10 +33,10 @@ public class AuthController {
     }
 
 
-    @PostMapping("/register/client")
-    public ResponseEntity<ResponseDTO<Long>> registerClient(@RequestBody RegisterForm form) {
-        User user = userService.registerClientUser(form.getLogin(), form.getPassword(), TypeUser.USER);
-        return responseService.created(user.getId());
+    @PostMapping("/register/user")
+    public ResponseEntity<ResponseDTO<String>> registerClient(@RequestBody RegisterForm form) {
+        userService.registerClientUser(form.getLogin(), form.getPassword(), TypeUser.USER, form.getEmail(), form.getName());
+        return responseService.created("Usuario criado com sucesso");
     }
 
 }

@@ -7,13 +7,17 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 @ControllerAdvice
 @RequiredArgsConstructor
@@ -30,7 +34,14 @@ public class ApplicationExceptionHandler extends ResponseEntityExceptionHandler 
     @ExceptionHandler({ ResourceNotFoundException.class })
     public ResponseEntity<Object> handleResourceNotFoundException(ResourceNotFoundException ex,
                                                                   WebRequest request) {
-        return handleException(ex, HttpStatus.NOT_FOUND, request, ex.getMessage() + " - " + ex.getResource());
+        String message = ex.getMessage();
+        if (message == null || message.isBlank()) {
+            message = ex.getResource() + " não encontrado";
+        } else if (ex.getResource() != null && !ex.getResource().isBlank()) {
+            message = message + " - " + ex.getResource();
+        }
+
+        return handleException(ex, HttpStatus.NOT_FOUND, request, message);
     }
 
     @ExceptionHandler({ ServicesException.class })
@@ -50,10 +61,29 @@ public class ApplicationExceptionHandler extends ResponseEntityExceptionHandler 
         return handleException(ex, HttpStatus.UNAUTHORIZED, request, ex.getMessage());
     }
 
+    @Override
+    protected ResponseEntity<Object> handleMethodArgumentNotValid(
+            MethodArgumentNotValidException ex,
+            HttpHeaders headers,
+            HttpStatusCode status,
+            WebRequest request
+    ) {
+        ResponseDTO<List<String>> response = new ResponseDTO<>();
+        response.setErrors(ex.getBindingResult().getFieldErrors().stream()
+                .map(this::formatFieldError)
+                .toList());
+
+        return handleExceptionInternal(ex, response, headers, HttpStatus.BAD_REQUEST, request);
+    }
+
     protected ResponseEntity<Object> handleException(Exception ex, HttpStatus status, WebRequest req, String message) {
         ResponseDTO<List<String>> response = new ResponseDTO<>();
         response.setErrors(Collections.singletonList((message)));
         return handleExceptionInternal(ex, response, new HttpHeaders(), status, req);
+    }
+
+    private String formatFieldError(FieldError fieldError) {
+        return fieldError.getField() + ": " + Objects.requireNonNullElse(fieldError.getDefaultMessage(), "valor inválido");
     }
 
 }

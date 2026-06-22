@@ -131,7 +131,7 @@ public class JwtTokenProvider {
     }
 
     public String extractId(String token) {
-        return getClaim(token, c -> c.get("id", String.class));
+        return getClaim(token, c -> String.valueOf(c.get("id")));
     }
 
     public Boolean isBlockedTemporary(String token) {
@@ -145,4 +145,3 @@ public class JwtTokenProvider {
                 : null;
     }
 }
-
