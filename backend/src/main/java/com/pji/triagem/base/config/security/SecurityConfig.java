@@ -50,7 +50,7 @@ public class SecurityConfig {
                                 .requestMatchers("/auth/teste").hasRole("USER") // Exigir autenticação para todas as outras rotas
                                 .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html","/swagger-resources/**").permitAll()
                                 .requestMatchers("/api-docs/**").permitAll()
-                                .requestMatchers("/auth/register/client").permitAll()
+                                .requestMatchers("/auth/register/user").permitAll()
                                 .anyRequest().authenticated()  // Exigir autenticação para todas as outras rotas
                 )
                 // é responsável por autenticar as credenciais iniciais do usuário
